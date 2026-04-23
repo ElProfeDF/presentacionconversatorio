@@ -32,7 +32,7 @@
             background: radial-gradient(circle at 50% 50%, #1a1a1d 0%, var(--dark) 100%);
         }
 
-        /* --- Lateral Izquierdo Animado --- */
+        /* --- Lateral Izquierdo (Oculto en móvil pequeño si es necesario, o reducido) --- */
         .sidebar-title {
             background: rgba(0,0,0,0.5); border-right: 1px solid rgba(255,255,255,0.05);
             display: flex; align-items: center; justify-content: center; position: relative;
@@ -41,27 +41,25 @@
             writing-mode: vertical-rl; transform: rotate(180deg);
             font-family: 'Space Mono', monospace; font-size: 1.4rem; font-weight: 900;
             color: var(--white); letter-spacing: 15px; text-transform: uppercase;
-            opacity: 0; transition: all 1s cubic-bezier(0.19, 1, 0.22, 1); position: absolute;
+            opacity: 0; transition: all 1s ease; position: absolute;
         }
         .vertical-text.active { opacity: 0.8; letter-spacing: 6px; color: var(--coral); text-shadow: var(--neon-coral); }
 
         /* --- Título Superior --- */
-        .header-top { position: fixed; top: 20px; right: 40px; z-index: 1000; }
+        .header-top { position: fixed; top: 20px; right: 40px; z-index: 1000; text-align: right; }
         #slideTitle { 
             font-size: 1.4rem; font-weight: 900; color: var(--gold); 
             text-transform: uppercase; letter-spacing: 3px; 
             animation: pulse-gold 3s infinite ease-in-out;
-            transition: 0.3s;
         }
-        #slideTitle:hover { text-shadow: var(--neon-gold); transform: scale(1.05); color: var(--white); }
 
         @keyframes pulse-gold {
-            0%, 100% { transform: scale(1); opacity: 0.8; text-shadow: 0 0 5px var(--gold); }
-            50% { transform: scale(1.02); opacity: 1; text-shadow: 0 0 25px var(--gold); }
+            0%, 100% { transform: scale(1); text-shadow: 0 0 5px var(--gold); }
+            50% { transform: scale(1.02); text-shadow: 0 0 15px var(--gold); }
         }
 
         /* --- Escenario de Tarjetas --- */
-        .slide-container { position: relative; padding: 100px 60px 60px 60px; display: flex; justify-content: center; align-items: center; }
+        .slide-container { position: relative; padding: 80px 40px 40px 40px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
         .slide {
             position: absolute; width: 95%; height: 80vh; display: none;
             grid-template-columns: repeat(12, 1fr); grid-template-rows: repeat(12, 1fr); gap: 20px;
@@ -71,36 +69,30 @@
         /* --- Tarjetas --- */
         .card {
             background: var(--panel); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 30px; padding: 30px; opacity: 0;
+            border-radius: 30px; padding: 25px; opacity: 0;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             text-align: center; cursor: pointer; position: relative;
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.8s, box-shadow 0.4s, border-color 0.4s;
+            transition: transform 0.5s ease, opacity 0.8s, box-shadow 0.4s;
+            overflow-y: auto;
         }
 
-        .slide.active .card:nth-child(odd) { animation: fadeInRight 1s forwards; }
-        .slide.active .card:nth-child(even) { animation: fadeInLeft 1s forwards; }
+        .slide.active .card:nth-child(odd) { animation: fadeInRight 0.8s forwards; }
+        .slide.active .card:nth-child(even) { animation: fadeInLeft 0.8s forwards; }
 
-        @keyframes fadeInRight { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-100px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeInRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
 
-        .card:hover {
-            transform: scale(1.05) translateZ(50px);
-            border-color: var(--coral);
-            box-shadow: var(--neon-coral);
-            z-index: 50;
-        }
+        .card:hover { border-color: var(--coral); box-shadow: var(--neon-coral); }
 
-        /* --- ZOOM FOCAL (75%) --- */
+        /* --- ZOOM FOCAL (Móvil Adaptado) --- */
         .card.expanded {
             position: fixed !important; top: 50% !important; left: 50% !important;
             transform: translate(-50%, -50%) scale(1) !important;
-            width: 75vw !important; height: 75vh !important;
+            width: 85vw !important; height: 80vh !important;
             z-index: 9999 !important; background: var(--panel);
             box-shadow: 0 0 150px rgba(0,0,0,0.95), var(--neon-coral);
-            padding: 60px; border-color: var(--coral);
+            padding: 40px 25px; border-color: var(--coral);
         }
-        .card.expanded h3 { font-size: 2.8rem; margin-bottom: 25px; }
-        .card.expanded p { font-size: 1.4rem; line-height: 1.7; max-width: 90%; }
 
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -109,28 +101,61 @@
         }
         .overlay.active { opacity: 1; pointer-events: all; }
 
-        /* Tamaños Bento */
+        /* Tamaños Bento Escritorio */
         .card-lg { grid-column: span 6; grid-row: span 8; }
         .card-md { grid-column: span 4; grid-row: span 6; }
         .card-sm { grid-column: span 3; grid-row: span 4; }
         .card-tall { grid-column: span 4; grid-row: span 12; }
         .card-wide { grid-column: span 8; grid-row: span 4; }
 
-        .card h3 { color: var(--coral); font-size: 1.4rem; margin-bottom: 15px; text-transform: uppercase; font-weight: 900; }
-        .card p { font-size: 0.95rem; line-height: 1.6; color: var(--gray); text-align: center; }
+        .card h3 { color: var(--coral); font-size: 1.3rem; margin-bottom: 12px; text-transform: uppercase; font-weight: 900; }
+        .card p { font-size: 0.95rem; line-height: 1.6; color: var(--gray); }
         .card strong { color: var(--white); font-weight: 800; }
-        .card-img { width: 100%; height: 160px; background-size: cover; background-position: center; border-radius: 20px; margin-bottom: 15px; }
+        .card-img { width: 100%; height: 150px; background-size: cover; background-position: center; border-radius: 20px; margin-bottom: 15px; flex-shrink: 0; }
 
-        .controls { position: fixed; bottom: 30px; right: 40px; display: flex; gap: 15px; z-index: 2000; }
+        .controls { position: fixed; bottom: 20px; right: 20px; display: flex; gap: 10px; z-index: 2000; }
         .btn { 
             background: var(--panel); color: white; border: 1px solid #444; 
-            padding: 12px 25px; border-radius: 5px; font-family: 'Space Mono'; 
-            font-weight: 700; cursor: pointer; transition: 0.4s;
+            padding: 10px 20px; border-radius: 5px; font-family: 'Space Mono'; 
+            font-weight: 700; cursor: pointer; transition: 0.4s; font-size: 0.8rem;
         }
-        .btn:hover { background: var(--coral); border-color: var(--coral); box-shadow: var(--neon-coral); transform: scale(1.1); }
+        .btn:hover { background: var(--coral); border-color: var(--coral); }
+
+        /* --- RESPONSIVIDAD CELULARES --- */
+        @media (max-width: 768px) {
+            #presentation { grid-template-columns: 50px 1fr; }
+            .sidebar-title { border-right: none; }
+            .vertical-text { font-size: 0.9rem; letter-spacing: 8px; }
+            .header-top { right: 20px; top: 15px; max-width: 70%; }
+            #slideTitle { font-size: 0.9rem; letter-spacing: 1px; }
+
+            .slide-container { padding: 60px 15px 80px 10px; align-items: flex-start; overflow-y: auto; }
+            .slide { 
+                display: none; height: auto; position: relative; 
+                grid-template-columns: 1fr; grid-template-rows: auto; 
+                gap: 15px; padding-bottom: 50px;
+            }
+            .slide.active { display: flex; flex-direction: column; }
+
+            .card { 
+                grid-column: span 1 !important; grid-row: auto !important; 
+                width: 100%; min-height: 180px; padding: 25px 15px;
+                transform: translateY(20px);
+            }
+            
+            .card.expanded {
+                width: 95vw !important; height: 90vh !important;
+                padding: 30px 15px;
+            }
+            .card.expanded h3 { font-size: 1.5rem; }
+            .card.expanded p { font-size: 1rem; }
+            
+            .controls { bottom: 10px; right: 10px; width: 100%; justify-content: center; }
+            .btn { padding: 12px; flex: 1; text-align: center; }
+        }
     </style>
 </head>
-<body>
+<body onclick="handleGlobalClick(event)">
 
     <div class="overlay" id="bgOverlay" onclick="closeExpanded()"></div>
 
@@ -148,109 +173,109 @@
             <div class="header-top"><h1 id="slideTitle">INTRO: DE LA PLAZA A LA PANTALLA</h1></div>
 
             <div class="slide active" id="s1">
-                <div class="card card-lg" style="grid-area: 1/1/9/7;" onclick="expandCard(this)">
+                <div class="card card-lg" onclick="expandCard(this)">
                     <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1472162072942-cd5147eb3902?q=80&w=2069');"></div>
                     <h3>LA NOSTALGIA DEL REFUGIO</h3>
-                    <p>Nuestra infancia estaba anclada a espacios físicos (la vereda, el club). Al cerrar la puerta de casa, el riesgo quedaba afuera. Hoy, como plantea la investigadora <strong>Danah Boyd</strong>, las infancias habitan un <strong>"laboratorio de identidad sin paredes"</strong>. El entorno se ha desmaterializado, operando sin fronteras, sin horarios de cierre y, a menudo, sin supervisión.</p>
+                    <p>Nuestra infancia estaba anclada a espacios físicos. Al cerrar la puerta de casa, el riesgo quedaba afuera. Hoy, las infancias habitan un <strong>"laboratorio de identidad sin paredes"</strong>. El entorno se ha desmaterializado, operando sin fronteras, sin horarios de cierre y, a menudo, sin supervisión.</p>
                 </div>
-                <div class="card card-md" style="grid-area: 1/7/7/13;" onclick="expandCard(this)">
+                <div class="card card-md" onclick="expandCard(this)">
                     <h3>FRICCIÓN CERO Y ACCESO PREMATURO</h3>
-                    <p>En el mundo analógico, la distancia y el tiempo actuaban como frenos naturales ante el peligro. Lo digital elimina esa fricción: la inmediatez y el anonimato hacen que un error adolescente escale a crisis global en segundos. Dato clave (<strong>Kids Online Argentina</strong>): La edad promedio de acceso al primer dispositivo con conexión se ha desplomado a los <strong>9 años</strong>.</p>
+                    <p>En el mundo analógico, la distancia actuaba como freno. Lo digital elimina esa fricción: la inmediatez y el anonimato hacen que un error adolescente escale a crisis global en segundos. La edad promedio de acceso al primer dispositivo con conexión se ha desplomado a los <strong>9 años</strong>.</p>
                 </div>
-                <div class="card card-wide" style="grid-area: 9/1/13/9;" onclick="expandCard(this)">
+                <div class="card card-wide" onclick="expandCard(this)">
                     <h3>LA BATALLA ASIMÉTRICA</h3>
-                    <p>Debemos dejar de juzgar bajo la lupa exclusiva de la moralidad. Lo que vemos no es simple <strong>"indisciplina"</strong>. Es un cerebro en desarrollo enfrentando a miles de ingenieros respaldados por I.A., cuyo único objetivo corporativo (<strong>Captología</strong>) es secuestrar la atención infantil para extraer y monetizar su tiempo en pantalla.</p>
+                    <p>Debemos dejar de juzgar bajo la lupa exclusiva de la moralidad. Lo que vemos no es simple <strong>"indisciplina"</strong>. Es un cerebro en desarrollo enfrentando a miles de ingenieros respaldados por I.A., cuyo único objetivo corporativo (<strong>Captología</strong>) es secuestrar la atención infantil para monetizar su tiempo en pantalla.</p>
                 </div>
-                <div class="card card-sm" style="grid-area: 7/9/13/13; background: var(--blue);" onclick="expandCard(this)">
+                <div class="card card-sm" style="background: var(--blue);" onclick="expandCard(this)">
                     <h3 style="color:white;">LA PREMISA</h3>
                     <p style="color:white;">No buscamos demonizar la tecnología ni fomentar el aislamiento. Este no es un problema de software, es un desafío urgente de <strong>acompañamiento</strong>.</p>
                 </div>
             </div>
 
             <div class="slide" id="s2">
-                <div class="card card-tall" style="grid-area: 1/1/13/5;" onclick="expandCard(this)">
-                    <div class="card-img" style="height:300px; background-image: url('https://images.unsplash.com/photo-1519337265831-281ec6cc8514?q=80&w=2070');"></div>
+                <div class="card card-tall" onclick="expandCard(this)">
+                    <div class="card-img" style="height:250px; background-image: url('https://images.unsplash.com/photo-1519337265831-281ec6cc8514?q=80&w=2070');"></div>
                     <h3>EL ENGAÑO DEL "NATIVO DIGITAL"</h3>
-                    <p>Confundimos habilidad motriz con madurez cognitiva. Saber editar un video en segundos es memoria procedimental. Sin embargo, la <strong>corteza prefrontal</strong> (el freno biológico de los impulsos y evaluador de riesgos) no termina de desarrollarse hasta los <strong>25 años (Blakemore)</strong>. Exigirles voluntad pura para desconectarse es biológicamente injusto.</p>
+                    <p>Saber editar un video en segundos es memoria procedimental. Sin embargo, la <strong>corteza prefrontal</strong> (el evaluador de riesgos) no termina de desarrollarse hasta los <strong>25 años</strong>. Exigirles voluntad pura para desconectarse es biológicamente injusto.</p>
                 </div>
-                <div class="card card-md" style="grid-area: 1/5/7/9;" onclick="expandCard(this)">
+                <div class="card card-md" onclick="expandCard(this)">
                     <h3>CIBERACOSO Y SALUD MENTAL</h3>
-                    <p>El <strong>"Efecto de Desinhibición Online"</strong> hace que al no ver el dolor del otro, la empatía se apague temporalmente. Dato alarmante (<strong>UNICEF/SAP</strong>): El suicidio se consolidó como la segunda causa de muerte externa en adolescentes en Argentina, cuadro agravado drásticamente por la permanencia del acoso digital.</p>
+                    <p>El <strong>"Efecto de Desinhibición Online"</strong> hace que al no ver el dolor del otro, la empatía se apague temporalmente. El suicidio se consolidó como la segunda causa de muerte externa en adolescentes en Argentina.</p>
                 </div>
-                <div class="card card-md" style="grid-area: 1/9/7/13;" onclick="expandCard(this)">
+                <div class="card card-md" onclick="expandCard(this)">
                     <h3>EL CASINO EN EL BOLSILLO</h3>
-                    <p>Los criptocasinos hackean la percepción aplicando <strong>"pérdidas disfrazadas de ganancias" (LDW)</strong>. Estadística crítica (<strong>Defensoría del Pueblo CABA, 2024</strong>): Actualmente, 1 de cada 4 adolescentes (25%) ya lidia con la normalización de las apuestas online impulsado por ídolos y billeteras virtuales.</p>
+                    <p>Los criptocasinos hackean la percepción aplicando <strong>"pérdidas disfrazadas de ganancias"</strong>. Actualmente, 1 de cada 4 adolescentes ya lidia con la normalización de las apuestas online impulsado por ídolos y billeteras virtuales.</p>
                 </div>
-                <div class="card card-wide" style="grid-area: 7/5/13/13; border: 2px solid var(--gold);" onclick="expandCard(this)">
+                <div class="card card-wide" style="border: 2px solid var(--gold);" onclick="expandCard(this)">
                     <h3>SHARENTING: LA HUELLA EXPUESTA</h3>
-                    <p>La sobreexposición comienza en la cuna por acción nuestra. Publicar ecografías, rutinas y berrinches crea una <strong>huella digital imborrable</strong> sin consentimiento. Contexto (<strong>Grooming Arg</strong>): Las denuncias por ciberengaño pederasta crecen a tasas exponenciales.</p>
+                    <p>La sobreexposición comienza en la cuna. Publicar ecografías y berrinches crea una <strong>huella digital imborrable</strong>. Las denuncias por ciberengaño crecen a tasas exponenciales, alimentadas por estos datos públicos.</p>
                 </div>
             </div>
 
             <div class="slide" id="s3">
-                <div class="card card-lg" style="grid-area: 1/1/9/7;" onclick="expandCard(this)">
+                <div class="card card-lg" onclick="expandCard(this)">
                     <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1616469829581-73993eb86b02?q=80&w=2070');"></div>
                     <h3>EL CHUPETE DIGITAL Y LA RESILIENCIA</h3>
-                    <p>Entregar una pantalla ante cada displacer anestesia el circuito emocional con un golpe de dopamina exógena. Dato conductual: Una pantalla colorida neutraliza un llanto en exactamente <strong>4 segundos</strong>, pero a cambio, les arrebatamos las <strong>"pesas emocionales"</strong>. Al no transitar la frustración, atrofiamos su resiliencia.</p>
+                    <p>Entregar una pantalla ante cada llanto anestesia el circuito emocional. Una pantalla colorida neutraliza un llanto en <strong>4 segundos</strong>, pero les arrebatamos las <strong>"pesas emocionales"</strong>. Al no transitar la frustración, atrofiamos su resiliencia.</p>
                 </div>
-                <div class="card card-md" style="grid-area: 1/7/7/13;" onclick="expandCard(this)">
+                <div class="card card-md" onclick="expandCard(this)">
                     <h3>RECOMPENSA VARIABLE (EL SCROLL)</h3>
-                    <p>Las plataformas operan bajo los mismos principios que Las Vegas. El gesto de <strong>"Pull-to-refresh"</strong> (deslizar para actualizar) es neurológicamente idéntico a tirar la palanca de una tragamonedas. La imprevisibilidad del próximo contenido genera compulsión.</p>
+                    <p>Las plataformas operan como Las Vegas. El gesto de <strong>"Pull-to-refresh"</strong> es neurológicamente idéntico a tirar la palanca de una tragamonedas. La imprevisibilidad genera compulsión y destruye la atención sostenida.</p>
                 </div>
-                <div class="card card-wide" style="grid-area: 9/1/13/13; background: rgba(255, 255, 255, 0.05);" onclick="expandCard(this)">
+                <div class="card card-wide" style="background: rgba(255, 255, 255, 0.05);" onclick="expandCard(this)">
                     <h3>LAS FORTALEZAS (LA OTRA CARA)</h3>
-                    <p>Esta autopsia técnica no debe nublar sus inmensas capacidades. Observamos rapidez cognitiva, alta capacidad de multitarea, una creatividad digital sin precedentes y un acceso democratizado a la información. No son una generación <strong>"rota"</strong>, son mentes diferentes que necesitan faros.</p>
+                    <p>Observamos rapidez cognitiva, alta capacidad de multitarea y una creatividad digital sin precedentes. No son una generación <strong>"rota"</strong>, son mentes diferentes navegando una tormenta perfecta que necesitan faros.</p>
                 </div>
             </div>
 
             <div class="slide" id="s4">
-                <div class="card card-lg" style="grid-area: 1/1/9/7;" onclick="expandCard(this)">
+                <div class="card card-lg" onclick="expandCard(this)">
                     <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1510218830377-2e994ea9087d?q=80&w=1932');"></div>
                     <h3>LA TECNOFERENCIA</h3>
-                    <p>Definida como las interrupciones crónicas en los vínculos causadas por la intrusión de pantallas. Compartimos los mismos metros cuadrados en la mesa, pero habitamos <strong>archipiélagos aislados</strong>. Estamos juntos, pero radicalmente solos, perdiendo la lectura vital del lenguaje corporal del otro.</p>
+                    <p>Definida como las interrupciones crónicas en los vínculos causadas por pantallas. Compartimos la misma mesa, pero habitamos <strong>archipiélagos aislados</strong>. Estamos juntos, pero radicalmente solos.</p>
                 </div>
-                <div class="card card-md" style="grid-area: 1/7/7/13;" onclick="expandCard(this)">
+                <div class="card card-md" onclick="expandCard(this)">
                     <h3>EL ROSTRO INEXPRESIVO</h3>
-                    <p>El experimento de <strong>Edward Tronick</strong> demostró que un rostro adulto neutral genera angustia severa en un niño. Hoy, el dorso de nuestro celular es ese rostro inexpresivo. Las conductas disruptivas infantiles suelen ser intentos biológicos desesperados por recuperar nuestra mirada.</p>
+                    <p>El experimento de Tronick demostró que un rostro adulto neutral genera angustia severa. Hoy, el dorso de nuestro celular es ese rostro inexpresivo. El berrinche es el intento biológico por <strong>recuperar nuestra mirada</strong>.</p>
                 </div>
-                <div class="card card-wide" style="grid-area: 9/1/13/11;" onclick="expandCard(this)">
+                <div class="card card-wide" onclick="expandCard(this)">
                     <h3>LA CRIANZA EN SOLEDAD</h3>
-                    <p>Nuestro abandono atencional rara vez es negligencia; es la supervivencia de sujetos autoexplotados. Estadística (<strong>Pew Research, 2020</strong>): Una mayoría significativa de padres admite usar la tecnología como niñera ante el agotamiento crónico. Perdimos la <strong>"aldea"</strong> física.</p>
+                    <p>Nuestro abandono atencional es la supervivencia de sujetos autoexplotados. Perdimos la <strong>"aldea"</strong> física, y el celular se convirtió en la red de contención más barata ante el agotamiento.</p>
                 </div>
             </div>
 
             <div class="slide" id="s5">
-                <div class="card card-wide" style="grid-area: 1/1/4/13; border: 2px solid var(--coral);">
-                    <h3>EL MÉTODO F.A.R.O.: ARQUITECTOS DEL ANDAMIAJE</h3>
-                    <p>No podemos prohibir el futuro, pero debemos ser sus arquitectos. Como en un edificio, colocamos <strong>"andamios"</strong> (controles, límites) que retiraremos a medida que ganen firmeza cognitiva. Un límite claro y previsible no es una represión, es un acto de organización emocional indispensable.</p>
+                <div class="card card-wide" style="border: 2px solid var(--coral);" onclick="expandCard(this)">
+                    <h3>EL MÉTODO F.A.R.O.</h3>
+                    <p>No podemos prohibir el futuro, pero debemos ser sus arquitectos. Como en un edificio, colocamos <strong>"andamios"</strong> (controles, límites) que retiraremos a medida que ganen firmeza cognitiva.</p>
                 </div>
-                <div class="card card-md" style="grid-area: 4/1/13/4;" onclick="expandCard(this)">
+                <div class="card card-md" onclick="expandCard(this)">
                     <h3>[F] RONTERAS TÉCNICAS</h3>
-                    <p>Debemos intervenir el entorno: <strong>apagar todas las notificaciones push</strong> (recuperar el dominio del tiempo) y configurar la pantalla en <strong>escala de grises</strong> para estrellar el impacto dopaminérgico visual contra una frontera aburrida.</p>
+                    <p>Intervenir el entorno: <strong>apagar todas las notificaciones push</strong> y configurar la pantalla en <strong>escala de grises</strong> para neutralizar el impacto dopaminérgico visual.</p>
                 </div>
-                <div class="card card-md" style="grid-area: 4/4/13/7;" onclick="expandCard(this)">
+                <div class="card card-md" onclick="expandCard(this)">
                     <h3>[A] LFABETIZACIÓN ALGORÍTMICA</h3>
-                    <p>Hacer visible lo invisible mostrándoles cómo la plataforma los lee y los manipula para generar retención. Enseñarles la vital <strong>"pausa antes del clic"</strong> para identificar patrones de manipulación corporativa y comercial.</p>
+                    <p>Enseñarles a <strong>"ver la Matrix"</strong>, revelando cómo la plataforma inyecta contenidos solo para retenerlos. Fomentar la vital "pausa antes del clic".</p>
                 </div>
-                <div class="card card-md" style="grid-area: 4/7/13/10;" onclick="expandCard(this)">
-                    <h3>[R] EGLAS Y ESPACIOS SAGRADOS</h3>
-                    <p>La tecnología no es un derecho inalienable, es un préstamo. El <strong>80% de los casos</strong> de grooming o porno ocurren de madrugada bajo las sábanas. La regla es innegociable: el teléfono se carga de noche en el living.</p>
+                <div class="card card-md" onclick="expandCard(this)">
+                    <h3>[R] EGLAS Y ESPACIOS</h3>
+                    <p>Establecer espacios sagrados. La regla es innegociable: el teléfono se carga de noche en el living, <strong>fuera de la habitación</strong>.</p>
                 </div>
-                <div class="card card-md" style="grid-area: 4/10/13/13;" onclick="expandCard(this)">
+                <div class="card card-md" onclick="expandCard(this)">
                     <h3>[O] RIENTACIÓN Y GUÍA</h3>
-                    <p>Abandonar el rol de supervisores punitivos para ser guías de montaña. Nuestra misión es iluminar los precipicios y marcar el puerto seguro mientras ellos desarrollan la autonomía necesaria para navegar solos.</p>
+                    <p>Nuestra misión es iluminar los precipicios y marcar el puerto seguro mientras ellos desarrollan la autonomía necesaria para navegar solos.</p>
                 </div>
             </div>
 
             <div class="slide" id="s6">
-                <div class="card card-lg" style="grid-area: 1/1/9/13; border: 2px solid var(--blue);" onclick="expandCard(this)">
+                <div class="card card-lg" style="border: 2px solid var(--blue);" onclick="expandCard(this)">
                     <div class="card-img" style="height:250px; background-image: url('https://images.unsplash.com/photo-1482192505345-5655af888cc4?q=80&w=2070');"></div>
                     <h3>LA CLÁUSULA DE AMNISTÍA</h3>
-                    <p>El adolescente debe saber que si comete un error grave (mandar una foto íntima, deber dinero), puede contarlo <strong>sin temor a perder el celular</strong> como primera consecuencia. Esto le arrebata al depredador su única arma real: el <strong>silencio por miedo</strong>.</p>
+                    <p>El adolescente debe saber que si comete un error grave en la red, puede contarlo <strong>sin temor a perder el celular</strong>. Esto le arrebata al depredador su única arma real: el silencio por miedo.</p>
                 </div>
-                <div class="card card-wide" style="grid-area: 9/1/13/13;">
+                <div class="card card-wide" onclick="expandCard(this)">
                     <h3>EL RETORNO A LA TRIBU</h3>
-                    <p>"No existe inteligencia artificial capaz de igualar el poder de contención de una mirada atenta y un abrazo firme. Nosotros somos la <strong>aldea que los cuida</strong>. Volvamos a ser tribu."</p>
+                    <p>"No existe ni existirá un algoritmo capaz de igualar la capacidad reguladora de una mirada atenta. <strong>Volvamos a ser la aldea que los cuida.</strong>"</p>
                 </div>
             </div>
 
@@ -297,6 +322,8 @@
             document.getElementById(`s${currentSlideIdx}`).classList.add('active');
             document.getElementById(`vt${currentSlideIdx}`).classList.add('active');
             document.getElementById('slideTitle').innerText = titles[currentSlideIdx - 1];
+            // Reset scroll on mobile
+            document.querySelector('.slide-container').scrollTop = 0;
         }
 
         function prevSlide() {
@@ -307,6 +334,7 @@
             document.getElementById(`s${currentSlideIdx}`).classList.add('active');
             document.getElementById(`vt${currentSlideIdx}`).classList.add('active');
             document.getElementById('slideTitle').innerText = titles[currentSlideIdx - 1];
+            document.querySelector('.slide-container').scrollTop = 0;
         }
     </script>
 </body>
